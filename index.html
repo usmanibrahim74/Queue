@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Queue Management System</title>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Inter', sans-serif;
+		}
+
+		body {
+			background: #f9fafb;
+			color: #333;
+		}
+
+		.container {
+			max-width: 97%;
+			/* Increased from 1400px */
+			margin: 0 auto;
+			padding: 2rem;
+		}
+
+		form {
+			background: white;
+			padding: 1.5rem;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			display: flex;
+			gap: 1rem;
+			margin-bottom: 2rem;
+			flex-wrap: wrap;
+		}
+
+		input,
+		select,
+		button {
+			padding: 0.8rem;
+			border: 1px solid #ddd;
+			border-radius: 6px;
+			font-size: 1rem;
+		}
+
+		input,
+		select {
+			flex: 1;
+			min-width: 200px;
+		}
+
+		button {
+			background: #1d72b8;
+			color: white;
+			border: none;
+			cursor: pointer;
+			transition: background 0.2s;
+			min-width: 120px;
+		}
+
+		button:hover {
+			background: #1666a2;
+		}
+
+		.page-header {
+			text-align: center;
+			margin-bottom: 2rem;
+			font-size: 3rem;
+			/* Reduced from 2.5rem */
+			color: #333;
+		}
+
+		.queue-columns {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+			/* Increased from 300px */
+			gap: 2rem;
+			margin-top: 2rem;
+		}
+
+		.queue-column {
+			padding: 2rem;
+			border-radius: 12px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.queue-column.pending {
+			background: #fff5f5;
+		}
+
+		.queue-column.completed {
+			background: #f5fff5;
+		}
+
+		.queue-column h2 {
+			font-size: 2.25rem;
+			/* Reduced from 2rem */
+			text-align: center;
+			margin-bottom: 1.5rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 1rem;
+		}
+
+		.status-count {
+			background: #333;
+			color: white;
+			padding: 0.2rem 1rem;
+			border-radius: 20px;
+			font-size: 1rem;
+			/* Reduced from 1.2rem */
+		}
+
+		.customer-card {
+			background: white;
+			padding: 1rem;
+			margin: 1rem 0;
+			border-radius: 8px;
+			border-left: 8px solid #1d72b8;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			font-size: 2rem;
+			/* Reduced from 1.4rem */
+			position: relative;
+			min-height: 60px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding-right: 120px;
+			/* Make space for buttons */
+		}
+
+		.card-actions {
+			display: none;
+			/* Hide by default */
+			gap: 0.5rem;
+			position: absolute;
+			right: 1rem;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		.customer-card:hover .card-actions {
+			display: flex;
+			/* Show on hover */
+		}
+
+		.action-btn {
+			min-width: 36px;
+			min-height: 36px;
+			width: 36px;
+			height: 36px;
+			flex: 0 0 36px;
+			background: white;
+			border: none;
+			cursor: pointer;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			padding: 0;
+		}
+
+		.action-btn:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+		}
+
+		.action-btn.to-pending:hover {
+			background: #e53e3e;
+		}
+
+		.action-btn.to-processing:hover {
+			background: #3182ce;
+		}
+
+		.action-btn.to-completed:hover {
+			background: #38a169;
+		}
+
+		.action-btn.to-delete:hover {
+			background: #dc2626;
+		}
+
+		.action-btn:hover .material-icons {
+			color: white;
+		}
+
+		.material-icons {
+			font-size: 20px;
+			color: #555;
+			transition: color 0.2s;
+		}
+
+		.wrap-data {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+
+		.branding {
+			text-align: center;
+			font-size: 3.5rem;
+			color: #1d72b8;
+			margin-bottom: 2rem;
+			font-weight: bold;
+		}
+
+		@media (max-width: 600px) {
+			.container {
+				padding: 1rem;
+			}
+
+			form {
+				padding: 1rem;
+			}
+
+			.queue-columns {
+				grid-template-columns: 1fr;
+			}
+
+			.page-header {
+				font-size: 1.75rem;
+				/* Reduced from 2rem */
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1 class="branding">الحسن رائس ملز</h1>
+		<form id="customerForm">
+			<input type="text" id="customerName" placeholder="Customer Name" required>
+			<select id="status" required>
+				<option value="pending">انتظار کریں</option>
+				<option value="completed">تشریف لے ائیں</option>
+			</select>
+			<button type="submit">Add Customer</button>
+		</form>
+
+		<h1 class="page-header">برائے مہربانی اپنی باری کا انتظار کریں</h1>
+
+		<div class="queue-columns">
+			<div class="queue-column pending">
+				<h2>انتظار کریں <span class="status-count" id="pendingCount">0</span></h2>
+				<div id="pendingQueue" class="wrap-data"></div>
+			</div>
+			<div class="queue-column completed">
+				<h2>تشریف لے ائیں <span class="status-count" id="completedCount">0</span></h2>
+				<div id="completedQueue" class="wrap-data"></div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		let customers = JSON.parse(localStorage.getItem('customers')) || [];
+
+		function addCustomer(name, status) {
+			customers.push({ name, status });
+			saveAndRender();
+		}
+
+		function updateStatus(index, newStatus) {
+			customers[index].status = newStatus;
+			saveAndRender();
+		}
+
+		function deleteCustomer(index) {
+			customers.splice(index, 1);
+			saveAndRender();
+		}
+
+		function saveAndRender() {
+			localStorage.setItem('customers', JSON.stringify(customers));
+			renderQueues();
+		}
+
+		function renderQueues() {
+			const queues = {
+				pending: document.getElementById('pendingQueue'),
+				completed: document.getElementById('completedQueue')
+			};
+
+			const statusColors = {
+				pending: '#ff9800',
+				completed: '#4caf50'
+			};
+
+			const statusIcons = {
+				pending: 'schedule',
+				completed: 'check_circle'
+			};
+
+			Object.keys(queues).forEach(status => {
+				const filteredCustomers = customers.filter(customer => customer.status === status);
+				document.getElementById(`${status}Count`).textContent = filteredCustomers.length;
+
+				queues[status].innerHTML = filteredCustomers
+					.map((customer) => {
+						// Find the actual index in the full customers array
+						const actualIndex = customers.findIndex(c => c === customer);
+						return `
+							<div class="customer-card" style="border-left-color: ${statusColors[status]}">
+								<strong>${customer.name}</strong>
+								<div class="card-actions">
+									${status !== 'pending' ?
+								`<button class="action-btn to-pending" onclick="updateStatus(${actualIndex}, 'pending')" title="Move to Pending">
+										<span class="material-icons">schedule</span>
+									</button>` : ''
+							}
+									${status !== 'completed' ?
+								`<button class="action-btn to-completed" onclick="updateStatus(${actualIndex}, 'completed')" title="Move to Completed">
+										<span class="material-icons">check_circle</span>
+									</button>` : ''
+							}
+								${status === 'completed' ?
+								`<button class="action-btn to-delete" onclick="deleteCustomer(${actualIndex})" title="Delete">
+										<span class="material-icons">delete</span>
+									</button>` : ''
+							}
+								</div>
+							</div>
+						`;
+					}).join('');
+			});
+		}
+
+		document.getElementById('customerForm').onsubmit = (e) => {
+			e.preventDefault();
+			const name = document.getElementById('customerName').value;
+			const status = document.getElementById('status').value;
+			addCustomer(name, status);
+			e.target.reset();
+		};
+
+		renderQueues();
+	</script>
+</body>
+
+</html>
