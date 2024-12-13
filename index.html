@@ -24,18 +24,74 @@
 			max-width: 97%;
 			/* Increased from 1400px */
 			margin: 0 auto;
-			padding: 2rem;
+			padding: 1rem 2rem;
+		}
+
+		.header-container {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 2rem;
 		}
 
 		form {
-			background: white;
-			padding: 1.5rem;
-			border-radius: 8px;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			display: flex;
-			gap: 1rem;
-			margin-bottom: 2rem;
-			flex-wrap: wrap;
+			margin-bottom: 0;
+			width: 300px;
+			background: transparent;
+			box-shadow: none;
+			padding: 0;
+		}
+
+		.float-input {
+			position: relative;
+			width: 100%;
+		}
+
+		.float-input input {
+			width: 100%;
+			padding: 1rem 0;
+			border: none;
+			border-bottom: 2px solid #e2e8f0;
+			background: transparent;
+			transition: all 0.3s ease;
+			font-size: 1.2rem;
+			outline: none;
+
+			/* Hide placeholder initially */
+			&::placeholder {
+				color: transparent;
+			}
+
+			/* Show placeholder only when field is focused */
+			&:focus::placeholder {
+				color: #94a3b8;
+			}
+		}
+
+		.float-input label {
+			position: absolute;
+			left: 0;
+			top: 1rem;
+			/* Changed from 50% */
+			transform: none;
+			/* Removed translateY */
+			color: #94a3b8;
+			transition: all 0.3s ease;
+			pointer-events: none;
+			background: transparent;
+		}
+
+		.float-input input:focus+label,
+		.float-input input:not(:placeholder-shown)+label {
+			top: -0.5rem;
+			/* Adjusted from 0 */
+			font-size: 0.875rem;
+			color: #1d72b8;
+		}
+
+		/* Add subtle background indicator on hover */
+		.float-input:hover input:not(:focus) {
+			background: linear-gradient(transparent 95%, #e2e8f0 95%);
 		}
 
 		input,
@@ -68,7 +124,6 @@
 
 		.page-header {
 			text-align: center;
-			margin-bottom: 2rem;
 			font-size: 3rem;
 			/* Reduced from 2.5rem */
 			color: #333;
@@ -79,7 +134,7 @@
 			grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
 			/* Increased from 300px */
 			gap: 2rem;
-			margin-top: 2rem;
+			margin-top: 1rem;
 		}
 
 		.queue-column {
@@ -119,7 +174,6 @@
 		.customer-card {
 			background: white;
 			padding: 1rem;
-			margin: 1rem 0;
 			border-radius: 8px;
 			border-left: 8px solid #1d72b8;
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -208,7 +262,7 @@
 			text-align: center;
 			font-size: 3.5rem;
 			color: #1d72b8;
-			margin-bottom: 2rem;
+			margin-bottom: 0;
 			font-weight: bold;
 		}
 
@@ -230,31 +284,256 @@
 				/* Reduced from 2rem */
 			}
 		}
+
+		@media (max-width: 768px) {
+			.header-container {
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			form {
+				width: 100%;
+			}
+		}
+
+		.column-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 1.5rem;
+			position: relative;
+		}
+
+		.delete-all-btn {
+			position: absolute;
+			right: -10px;
+			top: -10px;
+			width: 36px;
+			height: 36px;
+			min-width: 36px;
+			min-height: 36px;
+			flex: 0 0 36px;
+			border: none;
+			border-radius: 50%;
+			background: #dc2626;
+			cursor: pointer;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 0;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.delete-all-btn .material-icons {
+			font-size: 20px;
+			color: white;
+		}
+
+		.queue-column:hover .delete-all-btn {
+			display: flex;
+		}
+
+		.delete-all-btn:hover {
+			background: #b91c1c;
+			transform: scale(1.1);
+			transition: all 0.2s ease;
+		}
+
+		/* Add these new styles before the closing style tag */
+		.popup-overlay {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			z-index: 1000;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.popup-content {
+			background: white;
+			padding: 2rem;
+			border-radius: 8px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			text-align: center;
+			max-width: 400px;
+			width: 90%;
+		}
+
+		.popup-buttons {
+			display: flex;
+			gap: 1rem;
+			justify-content: center;
+			margin-top: 1.5rem;
+		}
+
+		.popup-button {
+			padding: 0.8rem 1.5rem;
+			border: none;
+			border-radius: 6px;
+			cursor: pointer;
+			font-size: 1rem;
+			transition: all 0.2s;
+		}
+
+		.popup-button.confirm {
+			background: #dc2626;
+			color: white;
+		}
+
+		.popup-button.cancel {
+			background: #e5e7eb;
+			color: #374151;
+		}
+
+		.popup-button:hover {
+			transform: translateY(-1px);
+		}
+
+		.page-header-container {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 2rem;
+		}
+
+		.datetime-display {
+			background: transparent;
+			padding: 0;
+			min-width: 400px;
+			display: flex;
+			flex-direction: column;
+			/* Changed from row to column */
+			align-items: flex-start;
+			/* Changed from baseline */
+			justify-content: center;
+			gap: 0.5rem;
+			/* Reduced gap for vertical layout */
+		}
+
+		.datetime-display .time {
+			font-size: 3.5rem;
+			font-weight: 700;
+			color: #1d72b8;
+			line-height: 1;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.datetime-display .date {
+			font-size: 1.75rem;
+			color: #666;
+			font-weight: 500;
+			line-height: 1.2;
+			/* Increased for better Urdu text spacing */
+			margin-left: 4px;
+			direction: rtl;
+			/* Right to left for Urdu */
+			text-align: right;
+			/* Right align Urdu text */
+		}
+
+		@media (max-width: 768px) {
+			.page-header-container {
+				flex-direction: column;
+			}
+
+			.datetime-display {
+				min-width: unset;
+				width: 100%;
+				align-items: center;
+				/* Center align on mobile */
+			}
+
+			.datetime-display .time {
+				font-size: 2.5rem;
+			}
+
+			.datetime-display .date {
+				font-size: 1.25rem;
+			}
+		}
+
+		.logo-container {
+			height: 80px;
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.logo-container span {
+			font-size: 1.5rem;
+			font-weight: 600;
+			color: #333;
+		}
+
+		.logo {
+			height: 100%;
+			width: auto;
+		}
+
+		@media (max-width: 768px) {
+			.logo-container {
+				height: 60px;
+			}
+		}
 	</style>
 </head>
 
 <body>
 	<div class="container">
-		<h1 class="branding">الحسن رائس ملز</h1>
-		<form id="customerForm">
-			<input type="text" id="customerName" placeholder="Customer Name" required>
-			<select id="status" required>
-				<option value="pending">انتظار کریں</option>
-				<option value="completed">تشریف لے ائیں</option>
-			</select>
-			<button type="submit">Add Customer</button>
-		</form>
+		<div class="header-container">
+			<form id="customerForm">
+				<div class="float-input">
+					<input type="text" id="customerName" placeholder="e.g., John Smith" required autocomplete="off">
+					<label for="customerName">Customer Name</label>
+				</div>
+			</form>
+			<div class="logo-container">
+				<span style="font-size: 5rem; font-weight: 600; color: #1d72b8;">ضياء ٹریڈرز</span>
+			</div>
+		</div>
 
-		<h1 class="page-header">برائے مہربانی اپنی باری کا انتظار کریں</h1>
+		<div class="page-header-container">
+			<div class="datetime-display">
+				<div class="time" id="currentTime">00:00:00</div>
+				<div class="date" id="currentDate">Loading...</div>
+			</div>
+			<h1 class="page-header">برائے مہربانی اپنی باری کا انتظار کریں</h1>
+		</div>
 
 		<div class="queue-columns">
 			<div class="queue-column pending">
-				<h2>انتظار کریں <span class="status-count" id="pendingCount">0</span></h2>
+				<div class="column-header">
+					<h2>انتظار کریں <span class="status-count" id="pendingCount">0</span></h2>
+					<button class="delete-all-btn" onclick="deleteAllByStatus('pending')">
+						<span class="material-icons">delete_sweep</span>
+					</button>
+				</div>
 				<div id="pendingQueue" class="wrap-data"></div>
 			</div>
 			<div class="queue-column completed">
-				<h2>تشریف لے ائیں <span class="status-count" id="completedCount">0</span></h2>
+				<div class="column-header">
+					<h2>تشریف لے ائیں <span class="status-count" id="completedCount">0</span></h2>
+					<button class="delete-all-btn" onclick="deleteAllByStatus('completed')">
+						<span class="material-icons">delete_sweep</span>
+					</button>
+				</div>
 				<div id="completedQueue" class="wrap-data"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Add this new markup before the closing body tag -->
+	<div class="popup-overlay" id="deletePopup">
+		<div class="popup-content">
+			<h2 style="margin-bottom: 1rem">Confirm Deletion</h2>
+			<p>Are you sure you want to delete all items in this section?</p>
+			<div class="popup-buttons">
+				<button class="popup-button cancel" onclick="closeDeletePopup()">Cancel</button>
+				<button class="popup-button confirm" id="confirmDelete">Delete All</button>
 			</div>
 		</div>
 	</div>
@@ -332,15 +611,75 @@
 			});
 		}
 
+		// Replace the existing deleteAllByStatus function with this new version
+		function deleteAllByStatus(status) {
+			const popup = document.getElementById('deletePopup');
+			const confirmBtn = document.getElementById('confirmDelete');
+
+			popup.style.display = 'flex';
+
+			// Remove any existing event listener
+			confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+
+			// Add new event listener
+			document.getElementById('confirmDelete').addEventListener('click', () => {
+				customers = customers.filter(customer => customer.status !== status);
+				saveAndRender();
+				closeDeletePopup();
+			});
+		}
+
+		// Add this new function
+		function closeDeletePopup() {
+			document.getElementById('deletePopup').style.display = 'none';
+		}
+
+		function updateDateTime() {
+			const now = new Date();
+			const timeElement = document.getElementById('currentTime');
+			const dateElement = document.getElementById('currentDate');
+
+			// Update time - changed to 12-hour format with AM/PM
+			timeElement.textContent = now.toLocaleTimeString('en-US', {
+				hour12: true,
+				hour: 'numeric',
+				minute: '2-digit',
+				second: '2-digit'
+			});
+
+			// Update date
+			dateElement.textContent = now.toLocaleDateString('ur-PK', {
+				weekday: 'long',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric'
+			});
+		}
+
+		// Update immediately and then every second
+		updateDateTime();
+		setInterval(updateDateTime, 1000);
+
 		document.getElementById('customerForm').onsubmit = (e) => {
 			e.preventDefault();
-			const name = document.getElementById('customerName').value;
-			const status = document.getElementById('status').value;
-			addCustomer(name, status);
-			e.target.reset();
+			const name = document.getElementById('customerName').value.trim();
+			if (name) {
+				addCustomer(name, 'pending');
+				e.target.reset();
+			}
 		};
 
 		renderQueues();
+
+		// Add this new event listener after the existing code
+		window.addEventListener('storage', (e) => {
+			if (e.key === 'customers') {
+				// Update local data with the new data from storage
+				customers = JSON.parse(e.newValue || '[]');
+				// Re-render the queues
+				renderQueues();
+			}
+		});
 	</script>
 </body>
 
